@@ -47,6 +47,16 @@ return [
             'report' => false,
         ],
 
+        // ===== TAMBAHKAN INI =====
+        'cloudinary' => [
+            'driver' => 'cloudinary',
+            'cloud' => env('CLOUDINARY_CLOUD_NAME'),
+            'key' => env('CLOUDINARY_KEY'),
+            'secret' => env('CLOUDINARY_SECRET'),
+            'secure' => true,
+        ],
+        // ==========================
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
