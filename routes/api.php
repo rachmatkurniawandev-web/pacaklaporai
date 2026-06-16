@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\LaporanController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +25,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('laporan', LaporanController::class);
     Route::post('laporan/{id}/upload-foto', [LaporanController::class, 'uploadFoto']);
     Route::put('laporan/{id}/status-change', [LaporanController::class, 'statusChange']);
+    Route::post('laporan/{id}/rating', [LaporanController::class, 'storeRating']);
+});
+
+// Profile Routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
+    
+    //profile
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
 });

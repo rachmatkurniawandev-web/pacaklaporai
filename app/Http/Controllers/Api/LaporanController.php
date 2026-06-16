@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StatusChangeLaporanRequest;
 use App\Http\Requests\StoreLaporanRequest;
+use App\Http\Requests\StoreRatingRequest;
 use App\Http\Requests\UpdateLaporanRequest;
 use App\Http\Requests\UploadFotoLaporanRequest;
 use App\Models\Laporan;
 use App\Models\LaporanFoto;
+use App\Models\Rating;
 use App\Models\StatusHistory;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
@@ -294,5 +296,61 @@ class LaporanController extends Controller
             'message' => 'Status laporan berhasil diubah',
             'data' => $laporan->load(['kategori', 'dinas', 'statusHistories']),
         ], 200);
+    }
+
+    // POST /api/laporan/{id}/rating
+    public function storeRating(StoreRatingRequest $request, $id)
+    {
+        $laporan = Laporan::find($id);
+
+        if (! $laporan) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Laporan tidak ditemukan',
+            ], 404);
+        }
+
+        // Otorisasi: hanya pemilik laporan
+        if ($laporan->user_id !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak memiliki akses untuk memberi rating laporan ini',
+            ], 403);
+        }
+
+        // Hanya boleh rating jika laporan sudah selesai
+        if ($laporan->status !== 'selesai') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Rating hanya bisa diberikan untuk laporan yang sudah selesai',
+            ], 422);
+        }
+
+        // Cek apakah sudah pernah rating (hanya boleh 1x)
+        $existingRating = Rating::where('laporan_id', $laporan->id)->first();
+
+        if ($existingRating) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Laporan ini sudah diberi rating sebelumnya',
+            ], 422);
+        }
+
+        $rating = Rating::create([
+            'laporan_id' => $laporan->id,
+            'user_id' => Auth::id(),
+            'nilai_rating' => $request->nilai_rating,
+            'komentar' => $request->komentar,
+            'kecepatan_respon' => $request->kecepatan_respon,
+            'kualitas_penanganan' => $request->kualitas_penanganan,
+            'sikap_petugas' => $request->sikap_petugas,
+            'is_anonymous' => $request->boolean('is_anonymous'),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Rating berhasil diberikan',
+            'data' => $rating,
+        ], 201);
     }
 }
