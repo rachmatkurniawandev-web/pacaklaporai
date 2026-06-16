@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\LaporanController;
+use App\Http\Controllers\Api\NotifikasiController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,8 +33,11 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
-    
-    //profile
+
+    // profile
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
+
+    Route::get('/notifikasi', [NotifikasiController::class, 'index']);
+    Route::put('/notifikasi/{id}/read', [NotifikasiController::class, 'markAsRead']);
 });
