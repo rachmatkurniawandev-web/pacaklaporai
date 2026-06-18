@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Dinas extends Model
 {
-    use SoftDeletes;
+    
 
     protected $table = 'dinas';
     
