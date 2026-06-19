@@ -15,6 +15,7 @@ use App\Models\StatusHistory;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AiClassificationService;
 
 class LaporanController extends Controller
 {
@@ -50,6 +51,15 @@ class LaporanController extends Controller
     // POST /api/laporan
     public function store(StoreLaporanRequest $request)
     {
+        // Jalankan AI klasifikasi sebelum simpan laporan
+        // AI analisis judul + deskripsi + apakah ada foto di request
+        $ai = new AiClassificationService();
+        $aiResult = $ai->analisis(
+            judul: $request->judul,
+            deskripsi: $request->deskripsi ?? '',
+            adaFoto: $request->hasFile('foto'),
+            kategoriId: $request->kategori_id
+        );
         $laporan = Laporan::create([
             'nomor_tiket' => Laporan::generateNomorTiket(),
             'user_id' => Auth::id(),
@@ -61,8 +71,12 @@ class LaporanController extends Controller
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'tanggal_kejadian' => $request->tanggal_kejadian,
-            'prioritas' => $request->prioritas ?? 'sedang',
-            'status' => 'pending',
+            // Prioritas: pakai hasil AI, tapi kalau user sudah pilih manual → pakai user
+            'prioritas'       => $request->prioritas ?? $aiResult['prioritas'],
+            'status'          => 'pending',
+            // Simpan hasil AI
+            'ai_confidence'   => $aiResult['ai_confidence'],
+            'ai_metadata'     => $aiResult['ai_metadata'],
         ]);
 
         // Catat history: transisi dari NULL (belum ada status) -> pending

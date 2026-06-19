@@ -8,6 +8,7 @@ use App\Models\Rating;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Services\AiClassificationService;
 
 class DashboardController extends Controller
 {
@@ -35,6 +36,7 @@ class DashboardController extends Controller
                 'recent_laporan' => $this->getRecentLaporan(),
                 'avg_response_time' => $this->getAvgResponseTime(),
                 'regional_hotspots' => $this->getRegionalHotspots(),
+                'ai_insight'        => $this->getAiInsight(),   // ← tambahkan ini
             ],
         ], 200);
     }
@@ -309,6 +311,42 @@ class DashboardController extends Controller
                 'growth_rate' => $highestGrowth['growth_rate'],
             ] : null,
             'semua_kecamatan' => $result->take(10)->values(),
+        ];
+    }
+
+
+
+
+
+        /**
+     * AI Insight untuk banner di dashboard
+     * "Wilayah Sako memiliki jumlah laporan banjir tertinggi bulan ini"
+     */
+    private function getAiInsight(): array
+    {
+        // Ambil data hotspot dan kategori untuk generate insight
+        $hotspots    = $this->getRegionalHotspots();
+        $perKategori = $this->getPerKategori();
+ 
+        // Format hotspot untuk AiClassificationService
+        $hotspotFormatted = [];
+        if (isset($hotspots['top_district']) && $hotspots['top_district']) {
+            $hotspotFormatted[] = [
+                'label'           => $hotspots['top_district']['kecamatan'],
+                'jumlah_laporan'  => $hotspots['top_district']['total'],
+                'kategori_dominan'=> $perKategori[0]['nama'] ?? 'laporan',
+            ];
+        }
+ 
+        $insightTeks = AiClassificationService::generateDashboardInsight(
+            $hotspotFormatted,
+            $perKategori
+        );
+ 
+        return [
+            'teks'        => $insightTeks,
+            'generated_at'=> now()->toISOString(),
+            'model'       => 'PacakLaporAI-v1.0',
         ];
     }
 }

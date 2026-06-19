@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AgencyManagementController;
 use App\Http\Controllers\Api\Admin\ImageEnhancementController;
 use App\Http\Controllers\Api\Admin\UserManagementController;
 use App\Http\Controllers\Api\DashboardController;
@@ -66,5 +67,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('users/{id}',    [UserManagementController::class, 'show']);
         Route::put('users/{id}',    [UserManagementController::class, 'update']);
         Route::delete('users/{id}', [UserManagementController::class, 'destroy']);
+
+        // Agency Management
+        Route::get('dinas',         [AgencyManagementController::class, 'index']);
+        Route::post('dinas',        [AgencyManagementController::class, 'store']);
+        Route::get('dinas/{id}',    [AgencyManagementController::class, 'show']);
+        Route::put('dinas/{id}',    [AgencyManagementController::class, 'update']);
+        Route::delete('dinas/{id}', [AgencyManagementController::class, 'destroy']);
+
     });
 });
