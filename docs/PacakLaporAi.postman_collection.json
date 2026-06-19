@@ -20,11 +20,17 @@
                 "value": "application/json",
                 "description": "Aku kirim JSON data",
                 "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "description": "Request JSON response format",
+                "type": "text"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"nama\": \"Rachmat Kurniawan\",\r\n  \"email\": \"rachmat@test.com\",\r\n  \"password\": \"password123\",\r\n  \"nik\": \"1234567890123456\",\r\n  \"telepon\": \"+62812345678\",\r\n  \"alamat\": \"Jl. Sudirman No. 123\"\r\n}",
+              "raw": "{\r\n  \"name\": \"Test User Baru\",\r\n  \"email\": \"testbaru@test.com\",\r\n  \"password\": \"password123\",\r\n  \"password_confirmation\": \"password123\",\r\n  \"nik\": \"1234567890123488\",\r\n  \"telepon\": \"+62812345600\",\r\n  \"alamat\": \"Jl. Test No. 1\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -32,15 +38,10 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/register",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/register",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "register"
@@ -85,7 +86,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"email\": \"warga1@test.com\",\r\n  \"password\": \"password123\"\r\n}",
+              "raw": "{\r\n    \"email\": \"testuser@test.com\",\r\n    \"password\": \"password123\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -93,15 +94,10 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/login",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/login",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "login"
@@ -130,7 +126,7 @@
               },
               {
                 "key": "Authorization",
-                "value": "Bearer 2|qnrpYWNy0Vj2p9JPtr3yBvJpl1Zm13l53YTCwtbx35182158",
+                "value": "Bearer 4|SHMnle4IvVUX3LzwkMeAnTTqBdUKHiOd3ekn4lkL55a52875",
                 "type": "text"
               }
             ],
@@ -144,15 +140,10 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/user",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/user",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "user"
@@ -178,20 +169,15 @@
               },
               {
                 "key": "Authorization",
-                "value": "Bearer 2|qnrpYWNy0Vj2p9JPtr3yBvJpl1Zm13l53YTCwtbx35182158",
+                "value": "Bearer 4|SHMnle4IvVUX3LzwkMeAnTTqBdUKHiOd3ekn4lkL55a52875",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/logout",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/logout",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "logout"
@@ -241,7 +227,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"judul\": \"Lampu jalan mati di Jl. Sudirman\",\r\n    \"deskripsi\": \"Lampu jalan sudah mati selama 3 hari, membahayakan pengendara malam hari\",\r\n    \"lokasi\": \"Jl. Sudirman No. 45, Palembang\",\r\n    \"latitude\": -2.9909,\r\n    \"longitude\": 104.7566,\r\n    \"tanggal_kejadian\": \"2026-06-11\"\r\n}",
+              "raw": "{\r\n    \"judul\": \"kerusakan Taman Kota simpang 3 PUSRI\",\r\n    \"deskripsi\": \"Terjadi kerusakan Taman PUSRI, dan belum ada tindak lanjut\",\r\n    \"lokasi\": \"Jl. Residen Abdul Rozak\",\r\n    \"latitude\": -2.7659,\r\n    \"longitude\": 101.4576,\r\n    \"tanggal_kejadian\": \"2026-06-10\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -249,15 +235,10 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/laporan",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/laporan",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "laporan"
@@ -290,15 +271,10 @@
               "raw": ""
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/laporan",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/laporan",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "laporan"
@@ -331,15 +307,10 @@
               "raw": ""
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/laporan/{{laporan_id}}",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/laporan/{{laporan_id}}",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "laporan",
@@ -370,15 +341,10 @@
               "raw": "{\r\n    \"judul\": \"Lampu jalan mati di Jl. Sudirman (URGENT)\",\r\n    \"deskripsi\": \"Lampu jalan sudah mati selama 3 hari, sangat berbahaya untuk pengendara malam hari\"\r\n}"
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/laporan/{{laporan_id}}",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/laporan/{{laporan_id}}",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "laporan",
@@ -403,15 +369,10 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/laporan/{{laporan_id}}",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/laporan/{{laporan_id}}",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "laporan",
@@ -425,7 +386,13 @@
           "name": "Upload Foto Laporan",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -433,7 +400,7 @@
                   "key": "foto",
                   "type": "file",
                   "uuid": "a8e90ee1-9475-44ef-ad51-79013b55931a",
-                  "src": "/C:/Users/Asus/OneDrive/圖片/Screenshot/Screenshot 2026-05-11 202354.png"
+                  "src": "/C:/Users/Asus/OneDrive/圖片/data/WhatsApp Image 2026-06-10 at 19.40.56.jpeg"
                 },
                 {
                   "key": "keterangan",
@@ -450,15 +417,10 @@
               ]
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/laporan/{{laporan_id}}/upload-foto",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/laporan/{{laporan_id}}/upload-foto",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "laporan",
@@ -476,7 +438,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"success\": false,\r\n    \"message\": \"Anda tidak memiliki akses untuk mengubah status laporan\"\r\n}",
+              "raw": "{\r\n    \"status\": \"diproses\",\r\n    \"keterangan\": \"Sampah sudah diangkut, masalah selesai\",\r\n    \"catatan_petugas\": \"Sudah diverifikasi dan ditindak oleh petugas lapangan\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -484,20 +446,44 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/laporan/{{laporan_id}}/status-change",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/laporan/{{laporan_id}}/status-change",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "laporan",
                 "{{laporan_id}}",
                 "status-change"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Beri Rating Laporan",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nilai_rating\": 5,\r\n  \"komentar\": \"Terima kasih, masalah cepat ditangani\",\r\n  \"kecepatan_respon\": 4,\r\n  \"kualitas_penanganan\": 5,\r\n  \"sikap_petugas\": 5,\r\n  \"is_anonymous\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/laporan/{{laporan_id}}/rating",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "laporan",
+                "{{laporan_id}}",
+                "rating"
               ]
             }
           },
@@ -530,15 +516,10 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/profile",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/profile",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "profile"
@@ -578,15 +559,10 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/profile",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/profile",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "profile"
@@ -635,15 +611,10 @@
               ]
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/profile",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/profile",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "profile"
@@ -670,7 +641,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"current_password\": \"password123\",\r\n    \"new_password\": \"newpassword123\",\r\n    \"new_password_confirmation\": \"newpassword123\"\r\n}",
+              "raw": "{\r\n    \"email\": \"rinto@test.com\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -678,15 +649,10 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/profile",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/profile",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "profile"
@@ -724,15 +690,10 @@
               "raw": "{\r\n  \"email\": \"warga1@test.com\",\r\n  \"password\": \"password123\"\r\n}"
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/notifikasi",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/notifikasi",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "notifikasi"
@@ -747,20 +708,128 @@
             "method": "PUT",
             "header": [],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/notifikasi/2/read",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/notifikasi/{{notifikasi_id}}/read",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "notifikasi",
-                "2",
+                "{{notifikasi_id}}",
                 "read"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"warga1@test.com\",\r\n  \"password\": \"password123\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/dashboard/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Statistik",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"warga1@test.com\",\r\n  \"password\": \"password123\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/statistik",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "statistik"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Hotspot",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/hotspot?kategori_id=2&status=pending&radius=500",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "hotspot"
+              ],
+              "query": [
+                {
+                  "key": "kategori_id",
+                  "value": "2",
+                  "type": "text"
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "type": "text"
+                },
+                {
+                  "key": "radius",
+                  "value": "500",
+                  "type": "text"
+                }
               ]
             }
           },
@@ -810,6 +879,14 @@
     },
     {
       "key": "laporan_id",
+      "value": ""
+    },
+    {
+      "key": "notifikasi_id",
+      "value": ""
+    },
+    {
+      "key": "base_url",
       "value": ""
     }
   ]
