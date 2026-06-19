@@ -9,33 +9,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('laporan_foto', function (Blueprint $table) {
-            // URL foto hasil enhancement (foto asli tetap ada di kolom 'url')
             $table->string('enhanced_url')->nullable()->after('url');
-
-            // Public ID Cloudinary untuk foto enhanced (untuk delete nanti)
             $table->string('enhanced_public_id')->nullable()->after('enhanced_url');
-
-            // Nilai parameter enhancement yang dipakai admin
-            // Disimpan supaya bisa di-replay atau di-audit
             $table->integer('brightness')->default(0)->after('enhanced_public_id');
-            // Range: -100 sampai +100. 0 = tidak ada perubahan.
-
             $table->integer('contrast')->default(0)->after('brightness');
-            // Range: -100 sampai +100. 0 = tidak ada perubahan.
-
             $table->integer('sharpness')->default(0)->after('contrast');
-            // Range: 0 sampai 100. 0 = tidak ada sharpening.
-
-            // Flag apakah foto ini sudah pernah di-enhance
             $table->boolean('is_enhanced')->default(false)->after('sharpness');
-
-            // Siapa admin yang melakukan enhancement
             $table->foreignId('enhanced_by')->nullable()
                 ->constrained('users')
                 ->onDelete('set null')
                 ->after('is_enhanced');
-
-            // Kapan enhancement dilakukan
             $table->timestamp('enhanced_at')->nullable()->after('enhanced_by');
         });
     }
