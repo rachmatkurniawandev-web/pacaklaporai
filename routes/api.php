@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\StatistikController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\DashboardController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -54,4 +56,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // GET /api/statistik
     // Menggantikan angka hardcoded di dashboard Flutter
     Route::get('/statistik', [StatistikController::class, 'index']);
+
+    Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 });
