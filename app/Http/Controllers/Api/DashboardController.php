@@ -27,12 +27,14 @@ class DashboardController extends Controller
             'success' => true,
             'message' => 'Dashboard stats berhasil diambil',
             'data' => [
-                'summary'         => $this->getSummary(),
-                'trend_mingguan'  => $this->getTrendMingguan(),
-                'per_kategori'    => $this->getPerKategori(),
-                'per_dinas'       => $this->getPerDinas(),
-                'rating_average'  => $this->getRatingAverage(),
-                'recent_laporan'  => $this->getRecentLaporan(),
+                'summary' => $this->getSummary(),
+                'trend_mingguan' => $this->getTrendMingguan(),
+                'per_kategori' => $this->getPerKategori(),
+                'per_dinas' => $this->getPerDinas(),
+                'rating_average' => $this->getRatingAverage(),
+                'recent_laporan' => $this->getRecentLaporan(),
+                'avg_response_time' => $this->getAvgResponseTime(),
+                'regional_hotspots' => $this->getRegionalHotspots(),
             ],
         ], 200);
     }
@@ -51,11 +53,11 @@ class DashboardController extends Controller
 
         return [
             'total_laporan' => $total,
-            'pending'       => $perStatus['pending']    ?? 0,
-            'verifikasi'    => $perStatus['verifikasi'] ?? 0,
-            'diproses'      => $perStatus['diproses']   ?? 0,
-            'selesai'       => $perStatus['selesai']    ?? 0,
-            'ditolak'       => $perStatus['ditolak']    ?? 0,
+            'pending' => $perStatus['pending'] ?? 0,
+            'verifikasi' => $perStatus['verifikasi'] ?? 0,
+            'diproses' => $perStatus['diproses'] ?? 0,
+            'selesai' => $perStatus['selesai'] ?? 0,
+            'ditolak' => $perStatus['ditolak'] ?? 0,
         ];
     }
 
@@ -79,8 +81,8 @@ class DashboardController extends Controller
             $date = Carbon::now()->subDays($i)->format('Y-m-d');
             $trend[] = [
                 'tanggal' => $date,
-                'hari'    => Carbon::parse($date)->format('D'), // Mon, Tue, dll
-                'jumlah'  => $raw[$date] ?? 0,
+                'hari' => Carbon::parse($date)->format('D'), // Mon, Tue, dll
+                'jumlah' => $raw[$date] ?? 0,
             ];
         }
 
@@ -138,12 +140,175 @@ class DashboardController extends Controller
     private function getRecentLaporan()
     {
         return Laporan::with([
-                'user:id,name,foto_profil',
-                'kategori:id,nama,warna,icon',
-                'dinas:id,nama,kode',
-            ])
+            'user:id,name,foto_profil',
+            'kategori:id,nama,warna,icon',
+            'dinas:id,nama,kode',
+        ])
             ->latest()
             ->take(5)
             ->get();
+    }
+
+    // ================================================================
+    // TAMBAHAN BARU — Untuk Trend Analysis (Mockup #6)
+    // ================================================================
+
+    /**
+     * Average Response Time
+     *
+     * Rata-rata waktu dari laporan dibuat (created_at)
+     * sampai laporan selesai (tanggal_selesai).
+     *
+     * Di mockup terlihat "Avg. Response Time: 14.2 min"
+     * Kita hitung dalam menit.
+     *
+     * Kenapa penting? Ini KPI utama pemerintah —
+     * seberapa cepat laporan warga ditangani.
+     */
+    private function getAvgResponseTime(): array
+    {
+        // Hanya laporan yang sudah selesai yang punya waktu respons valid
+        $laporanSelesai = Laporan::whereNotNull('tanggal_selesai')
+            ->where('status', 'selesai')
+            ->select('created_at', 'tanggal_selesai')
+            ->get();
+
+        if ($laporanSelesai->isEmpty()) {
+            return [
+                'rata_rata_menit' => 0,
+                'rata_rata_jam' => 0,
+                'rata_rata_hari' => 0,
+                'label' => '0 menit',
+                'total_selesai' => 0,
+            ];
+        }
+
+        // Hitung rata-rata dalam menit
+        $totalMenit = $laporanSelesai->sum(function ($laporan) {
+            return Carbon::parse($laporan->created_at)
+                ->diffInMinutes(Carbon::parse($laporan->tanggal_selesai));
+        });
+
+        $rataRataMenit = round($totalMenit / $laporanSelesai->count(), 1);
+        $rataRataJam = round($rataRataMenit / 60, 1);
+        $rataRataHari = round($rataRataJam / 24, 1);
+
+        // Buat label yang mudah dibaca
+        // Contoh: "14.2 menit", "2.5 jam", "1.3 hari"
+        if ($rataRataMenit < 60) {
+            $label = $rataRataMenit.' menit';
+        } elseif ($rataRataJam < 24) {
+            $label = $rataRataJam.' jam';
+        } else {
+            $label = $rataRataHari.' hari';
+        }
+
+        return [
+            'rata_rata_menit' => $rataRataMenit,
+            'rata_rata_jam' => $rataRataJam,
+            'rata_rata_hari' => $rataRataHari,
+            'label' => $label,
+            'total_selesai' => $laporanSelesai->count(),
+        ];
+    }
+
+    /**
+     * Regional Hotspots per Kecamatan
+     *
+     * Di mockup terlihat:
+     * "Top District: Kec. Menteng — 156 Reports this week"
+     * "Highest Growth: Kec. Penjaringan — +42% Growth rate"
+     *
+     * Karena kita tidak punya kolom 'kecamatan' di database,
+     * kita ekstrak nama kecamatan dari kolom 'lokasi' (text),
+     * atau grouping berdasarkan area koordinat lat/lng.
+     *
+     * Untuk demo, kita pakai pendekatan sederhana:
+     * ambil kata kunci dari kolom 'lokasi' dan kelompokkan.
+     */
+    private function getRegionalHotspots(): array
+    {
+        // Ambil semua laporan yang punya lokasi
+        $laporan = Laporan::whereNotNull('lokasi')
+            ->whereNull('deleted_at')
+            ->select('lokasi', 'status', 'created_at')
+            ->get();
+
+        // Daftar kecamatan di Palembang untuk pencocokan
+        $kecamatanPalembang = [
+            'Ilir Barat I', 'Ilir Barat II', 'Ilir Timur I', 'Ilir Timur II', 'Ilir Timur III',
+            'Seberang Ulu I', 'Seberang Ulu II', 'Kemuning', 'Kalidoni', 'Bukit Kecil',
+            'Gandus', 'Kertapati', 'Plaju', 'Sako', 'Sukarami', 'Alang-Alang Lebar',
+            'Sematang Borang', 'Jakabaring', 'Veteran', 'Demang',
+        ];
+
+        // Kelompokkan laporan berdasarkan kecamatan yang cocok
+        $regionalData = [];
+
+        foreach ($laporan as $item) {
+            $kecamatanDitemukan = 'Lainnya';
+
+            foreach ($kecamatanPalembang as $kec) {
+                if (stripos($item->lokasi, $kec) !== false) {
+                    $kecamatanDitemukan = $kec;
+                    break;
+                }
+            }
+
+            if (! isset($regionalData[$kecamatanDitemukan])) {
+                $regionalData[$kecamatanDitemukan] = [
+                    'kecamatan' => $kecamatanDitemukan,
+                    'total' => 0,
+                    'minggu_ini' => 0,
+                    'minggu_lalu' => 0,
+                ];
+            }
+
+            $regionalData[$kecamatanDitemukan]['total']++;
+
+            // Hitung laporan minggu ini vs minggu lalu untuk growth rate
+            $createdAt = Carbon::parse($item->created_at);
+            if ($createdAt->isAfter(Carbon::now()->subWeek())) {
+                $regionalData[$kecamatanDitemukan]['minggu_ini']++;
+            } elseif ($createdAt->isAfter(Carbon::now()->subWeeks(2))) {
+                $regionalData[$kecamatanDitemukan]['minggu_lalu']++;
+            }
+        }
+
+        // Hitung growth rate dan sort
+        $result = collect($regionalData)
+            ->map(function ($item) {
+                // Growth rate = ((minggu_ini - minggu_lalu) / minggu_lalu) * 100
+                $growth = 0;
+                if ($item['minggu_lalu'] > 0) {
+                    $growth = round(
+                        (($item['minggu_ini'] - $item['minggu_lalu']) / $item['minggu_lalu']) * 100,
+                        1
+                    );
+                } elseif ($item['minggu_ini'] > 0) {
+                    $growth = 100; // Naik dari 0 ke ada = 100%
+                }
+
+                return array_merge($item, ['growth_rate' => $growth]);
+            })
+            ->sortByDesc('total')
+            ->values();
+
+        // Ambil top district dan highest growth untuk summary card
+        $topDistrict = $result->first();
+        $highestGrowth = $result->sortByDesc('growth_rate')->first();
+
+        return [
+            'top_district' => $topDistrict ? [
+                'kecamatan' => $topDistrict['kecamatan'],
+                'total' => $topDistrict['total'],
+                'minggu_ini' => $topDistrict['minggu_ini'],
+            ] : null,
+            'highest_growth' => $highestGrowth ? [
+                'kecamatan' => $highestGrowth['kecamatan'],
+                'growth_rate' => $highestGrowth['growth_rate'],
+            ] : null,
+            'semua_kecamatan' => $result->take(10)->values(),
+        ];
     }
 }
