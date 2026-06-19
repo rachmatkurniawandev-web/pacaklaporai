@@ -16,9 +16,9 @@ class AuthController extends Controller
     {
         // Validasi input
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string|min:8|confirmed',
             'nik' => 'required|string|size:16|unique:users',
             'telepon' => 'required|string|max:20',
             'alamat' => 'required|string|max:255',
@@ -26,13 +26,13 @@ class AuthController extends Controller
 
         // Create user baru
         $user = User::create([
-            'name' => $validated['nama'],
+            'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'nik' => $validated['nik'],
             'telepon' => $validated['telepon'],
             'alamat' => $validated['alamat'],
-            'role' => 'warga', // Default role
+            'role' => 'warga',
             'is_active' => true,
         ]);
 
@@ -44,10 +44,10 @@ class AuthController extends Controller
             'token' => $token,
             'user' => [
                 'id' => $user->id,
-                'nama' => $user->name,
+                'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
-            ]
+            ],
         ], 201);
     }
 
@@ -66,14 +66,14 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         // Check password
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
         // Check if user active
-        if (!$user->is_active) {
+        if (! $user->is_active) {
             return response()->json([
                 'message' => 'User account is inactive',
             ], 403);
@@ -87,14 +87,14 @@ class AuthController extends Controller
             'token' => $token,
             'user' => [
                 'id' => $user->id,
-                'nama' => $user->name,
+                'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
                 'nik' => $user->nik,
                 'telepon' => $user->telepon,
                 'alamat' => $user->alamat,
                 'foto_profil' => $user->foto_profil,
-            ]
+            ],
         ], 200);
     }
 
@@ -107,7 +107,7 @@ class AuthController extends Controller
 
         return response()->json([
             'id' => $user->id,
-            'nama' => $user->name,
+            'name' => $user->name,
             'email' => $user->email,
             'role' => $user->role,
             'nik' => $user->nik,

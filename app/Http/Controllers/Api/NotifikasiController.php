@@ -64,4 +64,20 @@ class NotifikasiController extends Controller
             'data'    => $notifikasi->fresh(),
         ], 200);
     }
+
+    // PUT /api/notifikasi/read-all
+    public function markAllAsRead()
+    {
+        Notifikasi::where('user_id', Auth::id())
+            ->where('is_read', false)
+            ->update([
+                'is_read' => true,
+                'read_at' => now(),
+            ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Semua notifikasi telah ditandai sudah dibaca',
+        ], 200);
+    }
 }

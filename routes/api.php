@@ -40,10 +40,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // --- Profile ---
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
+    Route::post('/profile', [ProfileController::class, 'update']);
 
     // --- Notifikasi ---
     Route::get('/notifikasi',              [NotifikasiController::class, 'index']);
+    Route::put('/notifikasi/read-all',     [NotifikasiController::class, 'markAllAsRead']);
     Route::put('/notifikasi/{id}/read',    [NotifikasiController::class, 'markAsRead']);
+    
 
     // --- Hotspot (Peta Titik Lapor) ---
     // GET /api/hotspot

@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
             DinasSeeder::class,
             KategoriSeeder::class,
             UserSeeder::class,
+            MasterDataDemoSeeder::class,
+            LaporanDemoSeeder::class,
         ]);
     }
 }
