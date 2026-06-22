@@ -12,6 +12,14 @@ use App\Http\Controllers\Api\StatistikController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
+
+Route::get('/test', function () {
+    return response()->json([
+        'status' => true,
+        'message' => 'PacakLaporAi Backend Connected'
+    ]);
+});
+
 // ============================================================
 // PUBLIC ROUTES
 // ============================================================
